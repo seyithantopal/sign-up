@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { useHistory } from 'react-router-dom';
 import { UserContext } from '../../context/Users';
 import 'antd/dist/antd.css';
@@ -44,11 +44,13 @@ const SignUpForm = () => {
 	const history = useHistory();
 	const [form] = Form.useForm();
 
+	const [location, setLocation] = useState('');
+
 	const onFinish = (values) => {
 		const user = {
 			firstname: values.firstName,
 			gender: values.gender,
-			location: values.location,
+			location: location,
 			email: values.email,
 			password: values.password,
 		};
@@ -66,6 +68,10 @@ const SignUpForm = () => {
 				document.getElementById('pac-input'),
 			);
 			autocomplete.setTypes([]);
+			autocomplete.addListener('place_changed', function () {
+				var place = autocomplete.getPlace();
+				setLocation(place.formatted_address);
+			});
 		}
 		window.addEventListener('load', initMap);
 		return () => window.removeEventListener('load', initMap);
